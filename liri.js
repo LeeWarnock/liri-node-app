@@ -1,7 +1,14 @@
 var request = require('request');
 var keys = require('./keys.js');
 var fs = require('fs');
+//Pipes console.log output to log.txt
+var util = require('util');
+var log_file = fs.createWriteStream(__dirname + '/log.txt', {flags : 'w'});
 
+console.log = function(d) { //
+  log_file.write(util.format(d) + '\n');
+};
+//Sets up switch cases for node function
 switch (process.argv[2]) {
     case "my-tweets":grabTwitter(); break;
     case "spotify-this-song": grabSpotify(); break;
@@ -9,7 +16,7 @@ switch (process.argv[2]) {
     case "do-what-it-says": grabDoWhatItSays(); break;
     default: console.log("Please enter a valid entry. You can type: my-tweets, spotify-this-song, movie-this or do-what-it-says")
 }
-//grab mytweet information and display it
+//Grabs last 20 tweets and displays them
 function grabTwitter() {
     var Twitter = require('twitter');
     var client = new Twitter({
